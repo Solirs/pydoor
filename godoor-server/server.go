@@ -4,6 +4,7 @@ import(
 
 	"fmt"
 	"net"
+	"strings"
 	"log"
 
 )
@@ -16,6 +17,29 @@ func checkErr(err error){
 }
 
 
+func processmsg(msg string, con net.Conn){
+
+
+
+	fmt.Println("Server got:", msg)
+
+	cmd := strings.Fields(msg)
+
+	switch(cmd[0]){
+
+	default:
+		con.Write([]byte("Invalid command " + cmd[0]))
+	}
+
+	
+
+
+
+
+
+}
+
+
 
 func main(){
 
@@ -23,11 +47,6 @@ func main(){
 
 	checkErr(err)
 
-
-
-
-
-	
 
 	for {
 
@@ -41,7 +60,8 @@ func main(){
 			buf := make([]byte, 4096)
 			_, err := con.Read(buf)
 			checkErr(err)
-			fmt.Println("Server got:", string(buf))
+			processmsg(string(buf), con)
+			
 	    }		
 }
 

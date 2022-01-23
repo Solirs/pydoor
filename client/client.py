@@ -13,9 +13,9 @@ def main():
     while True:
         data = input(">")
         s.send(data.encode())
-        #dataFromClient = s.recv(4096)
+        dataFromClient = s.recv(4096)
 
-        #print(dataFromClient.decode())
+        print(dataFromClient.decode())
 
 
 
