@@ -1,12 +1,10 @@
 package main
 
 import(
-
 	"fmt"
 	"net"
 	"strings"
 	"log"
-
 )
 
 
@@ -28,14 +26,10 @@ func processmsg(msg string, con net.Conn){
 	switch(cmd[0]){
 
 	default:
-		con.Write([]byte("Invalid command " + cmd[0]))
+		con.Write([]byte(Red + "Invalid command " + cmd[0]))
 	}
 
 	
-
-
-
-
 
 }
 

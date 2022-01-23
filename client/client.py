@@ -1,5 +1,7 @@
 import socket
 import time
+from colorama import *
+
 
 def main():
 
@@ -12,10 +14,14 @@ def main():
 
     while True:
         data = input(">")
+
+        if data == " ":
+            pass
+
         s.send(data.encode())
         dataFromClient = s.recv(4096)
 
-        print(dataFromClient.decode())
+        print(dataFromClient.decode() + Fore.RESET)
 
 
 
