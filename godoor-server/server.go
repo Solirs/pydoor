@@ -1,10 +1,11 @@
 package main
 
-import (
+import(
+
 	"fmt"
-	"io/ioutil"
-	"log"
 	"net"
+	"log"
+
 )
 
 
@@ -37,9 +38,10 @@ func main(){
 		checkErr(err)
 	
 		for {
-			data, err := ioutil.ReadAll(con)
+			buf := make([]byte, 4096)
+			_, err := con.Read(buf)
 			checkErr(err)
-			fmt.Println("Server got:", string(data))
+			fmt.Println("Server got:", string(buf))
 	    }		
 }
 
