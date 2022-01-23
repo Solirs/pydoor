@@ -1,12 +1,10 @@
 package main
 
-import(
-
+import (
 	"fmt"
-	"net"
+	"io/ioutil"
 	"log"
-	"bufio"
-
+	"net"
 )
 
 
@@ -20,21 +18,30 @@ func checkErr(err error){
 
 func main(){
 
-
-
 	lis, err := net.Listen("tcp", ":35891")
 
 	checkErr(err)
 
 
+
+
+
+	
+
 	for {
+
+
 		con, err := lis.Accept()
+		
 
 		checkErr(err)
 	
-		message, _ := bufio.NewReader(con).ReadString('\n')
-		fmt.Print("Message Received:", string(message))
-	  }
+		for {
+			data, err := ioutil.ReadAll(con)
+			checkErr(err)
+			fmt.Println("Server got:", string(data))
+	    }		
+}
 
 
 
