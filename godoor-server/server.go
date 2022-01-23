@@ -54,7 +54,7 @@ func main(){
 			buf := make([]byte, 4096)
 			_, err := con.Read(buf)
 			checkErr(err)
-			processmsg(string(buf), con)
+			go processmsg(string(buf), con)
 			
 	    }		
 }

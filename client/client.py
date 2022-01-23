@@ -15,8 +15,8 @@ def main():
     while True:
         data = input(">")
 
-        if data == " ":
-            pass
+        if data == "":
+            continue
 
         s.send(data.encode())
         dataFromClient = s.recv(4096)
