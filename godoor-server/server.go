@@ -31,17 +31,13 @@ func processmsg(msg string, con net.Conn){
 	case "run":
 
 		com := RemoveIndex(cmd, 0)
-
 		coml := com[0]
-
 		args := RemoveIndex(com, 0)
-
 		out, err := exec.Command(coml, args...).Output()
-
-
 		con.Write([]byte(out))
-
-		checkErr(err)
+		if (err != nil){
+			con.Write([]byte(Red + "Invalid command " + coml))
+		}
 
 
 

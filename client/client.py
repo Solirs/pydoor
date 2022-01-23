@@ -24,8 +24,4 @@ def main():
         print(dataFromClient.decode() + Fore.RESET)
 
 
-
-
-
-
 main()
