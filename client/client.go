@@ -7,6 +7,7 @@ import(
 	"strings"
 	"log"
 	"bytes"
+	
 )
 
 
@@ -72,30 +73,36 @@ func processmsg(msg string, con net.Conn){
 
 func main(){
 
-	lis, err := net.Listen("tcp", ":35891")
-
-	checkErr(err)
-
-
 	for {
+		insock, err := net.Dial("tcp", "127.0.0.1:9999")
 
+		if err != nil{
+			continue
+		}
 
-		con, err := lis.Accept()
-		
+		_, err = insock.Write([]byte("Hey"))
 
-		checkErr(err)
-	
+		if err != nil{
+			continue
+		}
 		for {
-			buf := make([]byte, 4096)
-			_, err := con.Read(buf)
-			buf = bytes.Trim(buf, "\x00")
-			checkErr(err)
-			go processmsg(string(buf), con)
-			
-	    }		
-}
+
+		
+			for {
+				buf := make([]byte, 4096)
+				_, err := insock.Read(buf)
+				buf = bytes.Trim(buf, "\x00")
+				checkErr(err)
+				fmt.Print(string(buf))
+				go processmsg(string(buf), insock)
+				
+			}
+		}
+
+
+	}
 
 
 
-
+		
 }
