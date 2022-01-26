@@ -23,16 +23,13 @@ class Client:
 
             subprocess.run(["bash","--help"],stderr=subprocess.STDOUT, stdout=subprocess.DEVNULL)
             self.shell = "/bin/bash"
-            print("Shell is bash")
         except:
-            print("Shell is not bash")
             pass
 
     def checkinstall(self, prog):
         try:
 
             subprocess.call([prog, "--help"],stderr=subprocess.STDOUT, stdout=subprocess.DEVNULL)
-            print("shell installed")
             return True
         except:
             return False
