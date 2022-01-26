@@ -4,6 +4,8 @@ import socket
 import time
 import sys
 
+BUFFER = 4096
+
 class Server:
 
     def __init__(self):
@@ -18,7 +20,17 @@ class Server:
         else:
             print(resp)
 
-    
+
+
+    def recvall(self):
+        data = b''
+        while True:
+            part = self.con.recv(BUFFER)
+            data += part
+            if len(part) < BUFFER:
+                break
+        return data
+
 
     def start(self):
 
@@ -36,7 +48,7 @@ class Server:
         while True:
             
             self.con, addr = self.sock.accept()
-            rdata = self.con.recv(4096)
+            rdata = self.con.recv(BUFFER)
             
 
             if rdata:
@@ -48,7 +60,7 @@ class Server:
                     if j == "":
                         continue
                     self.con.send(j.encode())
-                    dat = self.con.recv(4096).decode()
+                    dat = self.recvall().decode()
                     self.handle_response(dat.rstrip())
 
                 
