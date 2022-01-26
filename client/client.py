@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import socket
 import time
 import subprocess
@@ -60,6 +62,7 @@ class Client:
             time.sleep(10) #This is to avoid high cpu usage when the client is running without any server to hear 
                 
 
-c = Client()
+if __name__ == "__main__":
+    c = Client()
 
-c.start()
+    c.start()

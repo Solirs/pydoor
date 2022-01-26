@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import socket
 import time
 import sys
@@ -50,7 +52,7 @@ class Server:
                     self.handle_response(dat.rstrip())
 
                 
+if __name__ == "__main__":
+    s = Server()
 
-s = Server()
-
-s.start()
+    s.start()
