@@ -50,6 +50,7 @@ setshell [absolute/path/to/shell] | Change the shell that the integrated shell w
         if self.cmd == "shellhelp":
             print(self.usage)
             return 1
+        
         else:
             return 0
 

