@@ -61,6 +61,8 @@ class Client:
                 if self.checkinstall(self.args[1]):
                     self.shell = self.args[1]
                     self.sock.send(b"Shell successfully changed to" + self.shell.encode())
+                else:
+                    self.sock.send(self.args[1].encode() + b" Doesn't seem to be installed, Exiting.")
                 
 
             
