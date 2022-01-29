@@ -33,6 +33,8 @@ setshell [absolute/path/to/shell] | Change the shell that the integrated shell w
         if "pydoor.quit" in resp:
             print("Quit signal received from client " + self.host)
             sys.exit(0) 
+        elif "pydoor_null" in resp:
+            return
         else:
             print(resp)
 

