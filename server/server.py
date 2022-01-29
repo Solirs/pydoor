@@ -95,7 +95,7 @@ setshell [absolute/path/to/shell] | Change the shell that the integrated shell w
                         continue
                     if (self.preprocesscmd() == 0):
 
-                        self.con.send(self.cmd.encode())
+                        self.con.sendall(self.cmd.encode())
                         dat = self.recvall().decode()
                         self.handle_response(dat.rstrip())
                     else:

