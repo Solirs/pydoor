@@ -67,6 +67,7 @@ setshell [absolute/path/to/shell] | Change the shell that the integrated shell w
 
             with open(file_name, 'wb+') as f:
                 f.write(screenshot_bytes)
+            print(f"Screenshot saved as {file_name}")
         else:
             print(resp)
 
