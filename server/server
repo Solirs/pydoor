@@ -37,6 +37,14 @@ setshell [absolute/path/to/shell] | Change the shell that the integrated shell w
         self.quitwarning = """WARNING : Running quit will kill the client program, proceed ? [Y/n]: """
         self.args = 0
         self.port = 0
+        self.yourip = 0
+
+
+    def get_net_ip(self) -> None:
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        s.connect(("8.8.8.8", 80))
+        self.yourip = s.getsockname()[0]
+        s.close()
 
 
     def parse_args(self):
@@ -122,6 +130,8 @@ setshell [absolute/path/to/shell] | Change the shell that the integrated shell w
 
         self.parse_args()
 
+        self.get_net_ip()
+
         print("Starting server")
 
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -129,11 +139,11 @@ setshell [absolute/path/to/shell] | Change the shell that the integrated shell w
         self.sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 
 
-        self.sock.bind(("127.0.0.1", self.port))
+        self.sock.bind((self.yourip, self.port))
 
         self.sock.listen(1)
 
-        print(f"Listening on {self.port}, waiting for connection from client")
+        print(f"Listening on {self.yourip}:{self.port}, waiting for connection from client")
 
         while True:
             

@@ -8,7 +8,10 @@ import sys
 import argparse
 import time
 import base64
-import pyautogui
+try:
+    import pyautogui
+except ImportError:
+    print("pyautogui not installed, please do not try to screenshot")
 
 
 BUFFER = 4096
@@ -25,6 +28,7 @@ class ScreenshotHandler:
         #data = base64.urlsafe_b64encode(s.tobytes())
         filetosend = open("/tmp/ss.png", "rb")
         data = filetosend.read()
+        os.remove("/tmp/ss.png")
         return data
 
     def send_screenshot(self, data) -> int:
