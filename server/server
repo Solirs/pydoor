@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
 import socket
-from PIL import Image
 import time
 import sys
 import argparse
