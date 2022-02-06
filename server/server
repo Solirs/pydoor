@@ -27,6 +27,8 @@ sleep | Break the connection with the client, but the client will still run and 
 quit | Kills the client and the server.
 shell [ip] [port]  | Drop a reverse shell to the ip and port specified depending on your current shell, it is recommended to send it to a netcat listener.
 setshell [absolute/path/to/shell] | Change the shell that the integrated shell will be wrapped around.       
+screenshot | Take a screenshot on the client and save it on the server.
+
 
 **Running any other command will make the client attempt to run it with /bin/bash or /bin/sh, or the shell specified via setshell.
         
