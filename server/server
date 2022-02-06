@@ -8,9 +8,14 @@ import base64
 import pyautogui
 import os
 import datetime
+from colorama import *
 import threading
 
 BUFFER = 4096
+
+
+
+
 
 class Server:
 
@@ -41,6 +46,7 @@ screenshot | Take a screenshot on the client and save it on the server.
         self.yourip = 0
 
 
+
     def get_net_ip(self) -> None:
         s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         s.connect(("8.8.8.8", 80))
@@ -62,7 +68,7 @@ screenshot | Take a screenshot on the client and save it on the server.
         encodedresp = resp
         resp = resp.decode('utf-8', 'ignore')
         if "pydoor.quit" in resp:
-            print("Quit signal received from client " + self.host)
+            print("[INFO] Quit signal received from client " + self.host)
             os._exit(0) 
         elif "pydoor_null" in resp:
             return
@@ -133,7 +139,7 @@ screenshot | Take a screenshot on the client and save it on the server.
 
         self.get_net_ip()
 
-        print("Starting server")
+        print(Fore.GREEN + Style.BRIGHT +"[INFO] Starting server")
 
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
@@ -144,7 +150,7 @@ screenshot | Take a screenshot on the client and save it on the server.
 
         self.sock.listen(1)
 
-        print(f"Listening on {self.yourip}:{self.port}, waiting for connection from client")
+        print(f"[INFO] Listening on {self.yourip}:{self.port}, waiting for connection from client")
 
         while True:
             
@@ -155,7 +161,7 @@ screenshot | Take a screenshot on the client and save it on the server.
             if rdata:
                 self.host = str(self.sock.getsockname()).strip("(").strip(")").strip(",").replace("'", "") #Remove tuple stuff like parentheses before printing, we dont need any anyways
                 
-                print(f"Connection received from client, {self.host} dropping shell")
+                print(f"[SUCCESS] Connection received from client, {self.host} dropping shell" + Fore.RESET)
                 inp = threading.Thread(target=self.shinput)
                 inp.start()
                 inp.join()
