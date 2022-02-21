@@ -106,7 +106,7 @@ screenshot | Take a screenshot on the client and save it on the server.
         elif self.cmd == "quit":
             choice =  input(self.quitwarning)
 
-            if choice.lower() == "y" or choice.lower() == "yes":
+            if choice.lower() == "y" or "yes":
                 return 0
             else:
                 return 1
@@ -118,7 +118,7 @@ screenshot | Take a screenshot on the client and save it on the server.
 
     def shinput(self):
         while True:
-            self.cmd = input(">")
+            self.cmd = input("pydoor>")
             if self.cmd == "":
                 continue
             if (self.preprocesscmd() == 0):
