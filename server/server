@@ -11,6 +11,11 @@ import datetime
 from colorama import *
 import threading
 
+try:
+    import pyautogui
+except ImportError:
+    print("pyautogui not installed, please do not try to screenshot")
+
 BUFFER = 4096
 
 
