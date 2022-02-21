@@ -1,5 +1,17 @@
 #!/usr/bin/env python
 
+
+"""
+pydoor by https://github.com/Solirs/pydoor/ made with love (and python).
+
+Before you complain, yes i know this gets absolutely shredded by firewalls or competent system administration or decent server configuration.
+My goal here isn't to make an industry standard tool but more of a convent way to backdoor a system (WITH LEGAL AUTHORIZATION!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!).
+And a fun tool to experiment and play with!
+
+Thanks for reading.
+
+"""
+
 import socket
 import time
 import subprocess
